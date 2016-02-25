@@ -76,6 +76,7 @@ namespace depth_image_proc {
   
 	int width_;
 	int height_;
+    bool radial_;
 
 	cv::Mat transform_;
   
@@ -152,6 +153,7 @@ namespace depth_image_proc {
 
 	// Read parameters
 	private_nh.param("queue_size", queue_size_, 5);
+    private_nh.param("radial", radial_, true);
 
 	// Synchronize inputs. Topic subscriptions happen on demand in the connection callback.
 	sync_.reset( new Synchronizer(SyncPolicy(queue_size_), sub_depth_, sub_intensity_, sub_info_) );
@@ -219,7 +221,7 @@ namespace depth_image_proc {
 	    K_ = info_msg->K;
 	    width_ = info_msg->width;
 	    height_ = info_msg->height;
-	    transform_ = initMatrix(cv::Mat_<double>(3, 3, &K_[0]),cv::Mat(D_),width_,height_,true);
+        transform_ = initMatrix(cv::Mat_<double>(3, 3, &K_[0]),cv::Mat(D_),width_,height_,radial_);
 	}
 
 	if (depth_msg->encoding == enc::TYPE_16UC1)

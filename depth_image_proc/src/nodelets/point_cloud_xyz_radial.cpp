@@ -63,6 +63,7 @@ namespace depth_image_proc {
   
 	int width_;
 	int height_;
+    bool radial_;
 
 	cv::Mat binned;
   
@@ -128,6 +129,7 @@ namespace depth_image_proc {
 
 	// Read parameters
 	private_nh.param("queue_size", queue_size_, 5);
+    private_nh.param("radial", radial_, true);
 
 	// Monitor whether anyone is subscribed to the output
 	ros::SubscriberStatusCallback connect_cb = 
@@ -175,7 +177,7 @@ namespace depth_image_proc {
 	    K_ = info_msg->K;
 	    width_ = info_msg->width;
 	    height_ = info_msg->height;
-	    binned = initMatrix(cv::Mat_<double>(3, 3, &K_[0]),cv::Mat(D_),width_,height_,true);
+        binned = initMatrix(cv::Mat_<double>(3, 3, &K_[0]),cv::Mat(D_),width_,height_,radial_);
 	}
 
 	if (depth_msg->encoding == enc::TYPE_16UC1)
